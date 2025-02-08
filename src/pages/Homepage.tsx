@@ -19,7 +19,7 @@ const Homepage = () => {
         <>
             <div>
                <div className={isOpen || showSurvey ? "opacity-20 transition-opacity duration-200" : "opacity-100"}> 
-                <OpenMeMail title="Open Me" recipient="Mika" onClick={handleOpenMail}/>
+                    <OpenMeMail title="Open Me" recipient="Mika" onClick={handleOpenMail}/>
                 </div> 
                 {isOpen && 
                     <MailContent 
@@ -35,8 +35,22 @@ const Homepage = () => {
                     />
                 }
                  {showSurvey && 
-                    <SurveyQuestions onClose={handleCloseSurvey} 
-                />}
+                    <SurveyQuestions 
+                        onClose={handleCloseSurvey}
+                        questions={ [
+                            "Can I be your VALENTINE?",
+                            "Perfect!",
+                            "Hungry?",
+                            "Side(s)!?",
+                            "Fruit(s)?",
+                            "dessert(s)?",
+                            "drink(s)",
+                            "activity(s)¿",
+                            "TIme?",
+                            "GREAT! <3!"
+                        ]}
+                    />
+                }
             </div>
         </>
     );

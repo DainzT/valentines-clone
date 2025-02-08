@@ -1,36 +1,200 @@
-import { useState } from "react";
+import {useState } from "react";
+import Survey from "./SurveyQuestions/Survey";
+import TimeInputWithImage from "./TimeInput";
 
 interface SurveyQuestionsProps {
     onClose: () => void;
+    questions: string[];
 }
 
-const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({ onClose }) => {
-    const questions = [
-        "Can I be your VALENTINE",
-        "How do you usually celebrate Valentine's Day?",
-        "What is your ideal Valentine's Day gift?",
-        "Who is your special someone this Valentine's Day? 💖",
-    ];
+const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const handleNext = () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
+    const [isAnswered, setIsAnswered] = useState(false);
+    const [noCheckBox, setNoCheckBox] = useState(false);
+    
+    const handleYesNoClick = (answer: string) => {
+        if (answer === "yes") {
+            setTimeout(() => {
+                handleNext()
+            }, 400);
         } else {
-            console.log("Survey Submitted!");
-            onClose(); // Close after the last question
+            setTimeout(() => {
+                setNoCheckBox(true); 
+            }, 500);
+            setTimeout(() => {
+                handleNext()
+            }, 900);
         }
     };
 
+    const handleNext = () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setIsAnswered(true)
+        } else {
+            handleSubmit();
+            onClose(); 
+        }
+    };
+
+    const handleSubmit = () => {
+        alert('Form Submitted!'); 
+      };
+
     return (
-        <div className="absolute inset-0 flex items-center justify-center z-50">
-            <div className="w-[367px] h-[454px] shadow-lg p-6 rounded-lg">
-                <h1>{questions[currentQuestionIndex]}</h1>
+        <div className="absolute inset-0 flex items-center justify-center">
+            <div className="fixed">
+                {currentQuestionIndex >= 1 && (
+                    <h1
+                        className={`absolute font-[Loker] text-[57px] w-[358px] h-[170px] leading-[64px] tracking-[-0.25px]
+                            ${currentQuestionIndex === 1 ? 'translate-x-8 -translate-y-34 -rotate-[3.75deg] text-[#CE4A4A]' : ''}
+                            ${currentQuestionIndex === 2 ? 'translate-x-20 -translate-y-28 -rotate-[1.63deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 3 ? 'translate-x-20 -translate-y-32 -rotate-[1.63deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 4 ? 'translate-x-20 -translate-y-32 -rotate-[1.63deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 5 ? 'translate-x-20 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 6 ? 'translate-x-12 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 7 ? 'translate-x-20 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 8 ? 'translate-x-12 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 9 ? 'translate-x-15 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            opacity-[33%]
+                        `}
+                    >
+                        {questions[currentQuestionIndex - 1]}
+                    </h1>
+                )}
+                    <h1
+                        className={`font-[Loker] text-[57px]  w-[358px] h-[170px] leading-[64px] tracking-[-0.25px]
+                            ${currentQuestionIndex === 0 ? 'translate-x-8 -translate-y-34 -rotate-[3.75deg] text-[#CE4A4A]' : ''}
+                            ${currentQuestionIndex === 1 ? 'translate-x-20 -translate-y-28 -rotate-[1.63deg] text-[#CE4A4A]' : ''}
+                            ${currentQuestionIndex === 2 ? 'translate-x-20 -translate-y-32 -rotate-[1.63deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 3 ? 'translate-x-20 -translate-y-32 -rotate-[1.63deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 4 ? 'translate-x-20 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 5 ? 'translate-x-12 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 6 ? 'translate-x-20 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 7 ? 'translate-x-12 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 8 ? 'translate-x-28 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                            ${currentQuestionIndex === 9 ? 'translate-x-15 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
+                        `}  
+                    >
+                    {questions[currentQuestionIndex]}
+                </h1>
+                
+                {currentQuestionIndex === 0 && (
+                        <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <span className="font-[Loker] text-[32px] -translate-x-7 -rotate-[11.81deg]">Yes</span>
+                                <input 
+                                    type="checkbox" 
+                                    className="w-[50px] h-[50px] custom-checkbox" 
+                                    onClick={() => handleYesNoClick("yes")}
+                                />
+                            </label>
+
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <span className="font-[Loker] text-[32px] translate-x-3 -rotate-[0.25deg]">No</span>
+                                <input 
+                                    type="checkbox" 
+                                    className={`w-[50px] h-[50px] translate-x-6 no-checkbox ${noCheckBox ? "custom-checkbox" : "no-custom-checkbox"}`} 
+                                    onClick={() => handleYesNoClick("no")}
+                                />
+                            </label>
+                        </div>
+                    )}
+
+                {currentQuestionIndex === 1 && (
+                    <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                        <Survey options={[["Home", "Outside"]]} type="none"/>
+                       
+                    </div>
+                )}
+
+                {currentQuestionIndex === 2 && (
+                    <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                         <Survey options={[
+                            ["torikatsu", "ramen", "gyoza"], 
+                            ["bibimbap", "Tteokbi", "bulgogi", "Kimchi"],
+                            ["hummus", "Greek salad", "grilled kebab", "shawarma", "paella"],
+                            ["tacos", "burritos", "nachos"],
+                            ["risotto", "carbonara", "fetucinne", "pesto"],
+                            ]} type="cuisine" />
+                    </div>
+                )}
+
+                {currentQuestionIndex === 3 && (
+                    <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                         <Survey options={[
+                            ["mac n cheese", "mushroom soup", "brocolli", "garlic bread", "caesar salad", "french fries", "corn & carrots", "mashed potato"]
+                            ]} type="none" />
+                    </div>
+                )}
+
+                {currentQuestionIndex === 4 && (
+                    <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                         <Survey options={[
+                                ["banana", "berry", "orange", "peach", "apple", "pomegranate"]
+                            ]} type="none" />
+                    </div>
+                )}
+
+                {currentQuestionIndex === 5 && (
+                    <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                         <Survey options={[
+                                ["cookies", "ice cream", "cake"]
+                            ]} type="none" />
+                    </div>
+                )}
+
+                {currentQuestionIndex === 6 && (
+                    <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                         <Survey options={[
+                                ["coconut shake", "ice coffee", "green tea", "grape juice", "ice tea", "four seasons", "red wine", "lemonade", "mocktail", "watrmlon shake"]
+                            ]} type="none" />
+                    </div>
+                )}
+
+                {currentQuestionIndex === 7 && (
+                    <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
+                         <Survey options={[
+                                ["latenght walks", "sleepover", "painting", "gaming"]
+                            ]} type="none" />
+                    </div>
+                )}
+
+                {currentQuestionIndex === 8 && (
+                    <div className="absolute flex gap-5 -translate-x-1 -translate-y-70">
+                        <TimeInputWithImage submit={handleSubmit}/>
+                    </div>
+                )}
+
+                {currentQuestionIndex === 9 && (
+                    <div className="absolute flex gap-5 -translate-x-1 -translate-y-70">
+                        <h1
+                            className="font-[Loker] text-[36px] text-[#DA0A0A] translate-x-8 translate-y-4"
+                        >
+                            Happy VALENTINES!
+                        </h1>
+                        <p
+                            className="absolute font-[Loker] text-[32px] text-[#CE4A4A] translate-x-5 translate-y-20 leading-[64px] tracking-[-0.25px]"
+                        >
+                            See you on
+                        </p>
+                        <p
+                            className="absolute font-[Loker] text-[64px] text-[#CE4A4A] translate-x-5 w-[350px] translate-y-30 leading-[64px] tracking-[-0.25px]"
+                        >
+                            February 14 at 
+                        </p>
+                    </div>
+                )}
             </div>
-            <button
-                 onClick={handleNext}
-            >
-                 {currentQuestionIndex === questions.length - 1 ? "Done" : "Next"}
-            </button>
+
+            {isAnswered && ( 
+                <button
+                        onClick={handleNext}
+                        className="absolute translate-x-25 translate-y-60 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
+                >
+                        {currentQuestionIndex === questions.length - 1 ? "Close  x" : "Next ->"}
+                </button>
+            )}
         </div>
     );
 };
