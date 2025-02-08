@@ -11,7 +11,7 @@ const OpenMeMail: React.FC<OpenMeMailProps> = ({title, recipient, onClick}) => {
     return (
         <div className="flex justify-center items-center h-screen">
             <button 
-                className=" bg-black w-[264px] h-[195px] mb-[5rem] rounded-3xl"
+                className="w-[264px] h-[195px] mb-[5rem] rounded-3xl"
                 onClick={onClick}
             >
                 <img 
