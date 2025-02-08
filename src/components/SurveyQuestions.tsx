@@ -174,14 +174,15 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions }) 
                             Happy VALENTINES!
                         </h1>
                         <p
-                            className="absolute font-[Loker] text-[32px] text-[#CE4A4A] translate-x-5 translate-y-20 leading-[64px] tracking-[-0.25px]"
+                            className="absolute font-[Loker] text-[32px] text-[#CE4A4A] translate-x-10 translate-y-20 leading-[64px] tracking-[-0.25px]"
                         >
                             See you on
                         </p>
                         <p
-                            className="absolute font-[Loker] text-[64px] text-[#CE4A4A] translate-x-5 w-[350px] translate-y-30 leading-[64px] tracking-[-0.25px]"
+                            className="absolute font-[Loker] text-[64px] text-[#CE4A4A] translate-x-10 w-[350px] translate-y-30 leading-[64px] tracking-[-0.25px]"
                         >
-                            February 14 at 
+                            February 14, LOVE <br/>
+                            .......
                         </p>
                     </div>
                 )}

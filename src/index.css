@@ -96,9 +96,29 @@
   content: "🌷"; 
   font-size: 40px; 
   position: absolute;
-  top: -80%; 
+  top: -5%; 
   left: 50%;
   transform: translate(-50%, 50%) rotate(0.23deg) scale(0.6); 
   transition: transform 0.3s ease, opacity 0.4s ease;
 }
 
+.select-checkbox-one {
+  appearance: none;
+  background-color: rgba(255, 255, 255, 0.5); /* Light gray background */
+  border: 2px solid #000000;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.select-checkbox-one:checked::before {
+  content: "🌷"; 
+  font-size: 40px; 
+  position: absolute;
+  top: -80%; 
+  left: 50%;
+  transform: translate(-50%, 50%) rotate(0.23deg) scale(0.6); 
+  transition: transform 0.3s ease, opacity 0.4s ease;
+}

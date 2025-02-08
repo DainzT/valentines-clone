@@ -10,6 +10,7 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [formData, setFormData] = useState<string[]>([]);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+    const [otherOptions, setOtherOptions] = useState<string>("")
 
     const handleCuisineChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value;
@@ -34,6 +35,15 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
         );
       };
 
+      const handleOtherOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const updatedOtherOption = event.target.value;
+        setOtherOptions(updatedOtherOption)
+        setFormData((prevData) => {
+            const filteredData = prevData.filter((item) => item !== otherOptions);
+            return updatedOtherOption ? [...filteredData, updatedOtherOption] : filteredData;
+          });
+    };
+
       const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         console.log("Form data submitted:", formData);
@@ -55,7 +65,7 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
                             </span>
                             <input 
                                 type="checkbox" 
-                                className={`w-[50px] h-[50px] translate-x-5 select-checkbox
+                                className={`w-[50px] h-[50px] translate-x-5 select-checkbox-one
                                     ${index == 0 ? "translate-x-14": ""}
                                 `}
                                 checked={selectedOptions.includes(option)} // Ensure the checkbox is checked based on the state
@@ -109,7 +119,11 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
                         <span className="font-[Loker] text-[24px] ">
                             Others:
                         </span>
-                        <input type="text" className="text-[24px] font-[Loker] outline-none translate-x-7 border-b-1 w-[198px]" />
+                        <input 
+                            type="text" 
+                            className="text-[24px] font-[Loker] outline-none translate-x-7 border-b-1 w-[198px]" 
+                            onChange={handleOtherOptionChange}  
+                        />
                     </div>
                 </div>
             );
@@ -142,7 +156,11 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
                             <span className="font-[Loker] text-[24px] ">
                                 Others:
                             </span>
-                            <input type="text" className="text-[24px] font-[Loker] outline-none translate-x-7 border-b-1 w-[198px]" />
+                            <input 
+                                type="text" 
+                                className="text-[24px] font-[Loker] outline-none translate-x-7 border-b-1 w-[198px]" 
+                                onChange={handleOtherOptionChange}  
+                            />
                         </div>
                     </div>
                 </div>
@@ -153,11 +171,8 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
     return (
         <form onSubmit={handleSubmit}>
             {renderCheckbox()}
-            <button
-            type="submit"
-            className="mt-5 p-2 bg-blue-500 text-white rounded-md"
-            >
-            Submit
+            <button type="submit">
+                dad
             </button>
         </form>
     );
