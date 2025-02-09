@@ -32,7 +32,9 @@ const MailContent: React.FC<MailContentProps> = ({onClose, onInvoiceClick, invoi
                                         onInvoiceClick(invoice) 
                                         onClose()
                                     } else {
-                                        console.log(invoice)}
+                                        onInvoiceClick(invoice) 
+                                        onClose()
+                                    }
                                 }}
                             >
                                 {invoice}

@@ -2,6 +2,10 @@ import {useState } from "react";
 import Survey from "./SurveyQuestions/Survey";
 import TimeInputWithImage from "./TimeInput";
 import Mail from "./Mail"
+import MilkNMoch3 from "../assets/milk-and-mocha3.gif"
+import MilkNMoch1 from "../assets/milk-and-mocha1.gif"
+import MilkNMoch2 from "../assets/milk-and-mocha2.gif"
+import Audio from "../../public/audio/Kiss_Me.mp3"
 
 interface SurveyQuestionsProps {
     onClose: () => void;
@@ -15,6 +19,7 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, na
     const [noCheckBox, setNoCheckBox] = useState(false);
     const [formData, setFormData] = useState<string[]>([]);
     const [fullData, setFullData] = useState<string[]>([]) 
+    const [isNo, setIsNo] = useState(false);
 
     const handleYesNoClick = (answer: string) => {
         if (answer === "yes") {
@@ -23,6 +28,7 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, na
             }, 400);
             setFullData([answer])
         } else {
+            setIsNo(true)
             setTimeout(() => {
                 setNoCheckBox(true); 
             }, 500);
@@ -106,10 +112,17 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, na
                                 <span className="font-[Loker] text-[32px] translate-x-3 -rotate-[0.25deg]">No</span>
                                 <input 
                                     type="checkbox" 
-                                    className={`w-[50px] h-[50px] translate-x-6 no-checkbox ${noCheckBox ? "custom-checkbox" : "no-custom-checkbox"}`} 
+                                    className={`w-[50px] h-[50px] translate-x-6 no-checkbox ${noCheckBox ? "noyes-custom-checkbox" : "no-custom-checkbox"}`} 
                                     onClick={() => handleYesNoClick("no")}
                                 />
                             </label>
+                            {isNo && (
+                                <img 
+                                    src={MilkNMoch3} 
+                                    alt="GIF animation" 
+                                    className="absolute w-[100px] h-[100px] translate-x-18 -translate-y-10 scale-x-[-1]"
+                                />
+                            )}
                         </div>
                     )}
 
@@ -197,11 +210,26 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, na
                 {currentQuestionIndex === 8 && (
                     <div className="absolute flex gap-5 -translate-x-1 -translate-y-70">
                         <TimeInputWithImage onFormSubmit={handleFormSubmit}/>
+                        <img 
+                        src={MilkNMoch1} 
+                        alt="GIF animation" 
+                        className="absolute w-[200px] h-[200px] translate-x-12 translate-y-33 scale-x-[-1]"
+                        />
                     </div>
+                    
                 )}
 
                 {currentQuestionIndex === 9 && (
                     <div className="absolute flex gap-5 -translate-x-1 -translate-y-70">
+                        <img 
+                        src={MilkNMoch2} 
+                        alt="GIF animation" 
+                        className="absolute w-[200px] h-[200px] translate-x-45 translate-y-33 scale-x-[-1]"
+                        />
+                         <audio autoPlay>
+                            <source src={Audio} type="audio/mp3" />
+                            Your browser does not support the audio element.
+                        </audio>
                         <h1
                             className="font-[Loker] text-[36px] text-[#DA0A0A] translate-x-8 translate-y-4"
                         >

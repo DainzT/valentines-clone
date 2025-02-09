@@ -1,4 +1,5 @@
 import greenMail from "../assets/GreenMail.png"
+import MilkynMocha from "../assets/milk-and-mocha5.gif"
 
 interface OpenMeMailProps {
     title: string;
@@ -10,6 +11,11 @@ interface OpenMeMailProps {
 const OpenMeMail: React.FC<OpenMeMailProps> = ({title, recipient, onClick}) => {
     return (
         <div className="flex justify-center items-center h-screen">
+             <img 
+                src={MilkynMocha} 
+                alt="GIF animation" 
+                className="absolute w-[170px] h-[170px] translate-x-10 -translate-y-53 scale-x-[-1]"
+            />
             <button 
                 className="w-[264px] h-[195px] mb-[5rem] rounded-3xl"
                 onClick={onClick}
