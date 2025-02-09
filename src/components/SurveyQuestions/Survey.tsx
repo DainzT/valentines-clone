@@ -4,9 +4,10 @@ import location from "../../assets/location_on.png"
 interface QuestionsProps {
     options:string[][];
     type: "cuisine" | "none";
+    onFormSubmit: (formData: string[]) => void;
 }
 
-const Survey: React.FC<QuestionsProps> = ({options, type}) => {
+const Survey: React.FC<QuestionsProps> = ({options, type, onFormSubmit}) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const [formData, setFormData] = useState<string[]>([]);
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -27,27 +28,31 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
     ];
 
     const handleCheckboxChange = (option: string, isChecked: boolean) => {
-        setSelectedOptions((prevData) =>
-            isChecked ? [...prevData, option] : prevData.filter((item) => item !== option)
-          );
-        setFormData((prevData) =>
-          isChecked ? [...prevData, option] : prevData.filter((item) => item !== option)
-        );
-      };
+        const updatedFormData = isChecked
+        ? [...formData, option] 
+        : formData.filter((item) => item !== option);
 
-      const handleOtherOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedOtherOption = event.target.value;
-        setOtherOptions(updatedOtherOption)
-        setFormData((prevData) => {
-            const filteredData = prevData.filter((item) => item !== otherOptions);
-            return updatedOtherOption ? [...filteredData, updatedOtherOption] : filteredData;
-          });
+        setSelectedOptions(updatedFormData); 
+        setFormData(updatedFormData); 
+
+        console.log("Form data updated:", updatedFormData);
+        onFormSubmit(updatedFormData);  
     };
 
-      const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        console.log("Form data submitted:", formData);
-      };
+    const handleOtherOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const updatedOtherOption = event.target.value;
+    
+        setOtherOptions(updatedOtherOption);
+
+        const updatedFormData = updatedOtherOption
+            ? formData.filter((item) => item !== otherOptions).concat(updatedOtherOption)
+            : formData.filter((item) => item !== otherOptions); 
+            
+        setFormData(updatedFormData); 
+        console.log("Form data updated:", updatedFormData);
+        onFormSubmit(updatedFormData); 
+    };
+
 
     const renderCheckbox = () => {
         if (options[0].length === 2 && type === "none") {
@@ -68,9 +73,9 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
                                 className={`w-[50px] h-[50px] translate-x-5 select-checkbox-one
                                     ${index == 0 ? "translate-x-14": ""}
                                 `}
-                                checked={selectedOptions.includes(option)} // Ensure the checkbox is checked based on the state
+                                checked={selectedOptions.includes(option)} 
                                 onChange={(e) =>
-                                  handleCheckboxChange(option, e.target.checked)
+                                handleCheckboxChange(option, e.target.checked)
                                 }
                             />
                         </label>
@@ -94,26 +99,26 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
                             ))}
                         </select>
                     </div>
-                    <div className="translate-x-5 -translate-y-23 w-[260px] h-[200px] overflow-x-scroll flex flex-col gap-5">
-                    {options[selectedIndex].map((option, index) => (
-                       <label key={index} className="flex items-center gap-0 cursor-pointer">
-                       <span
-                           className={`font-[Loker] text-[24px]
-                           `}
-                       >
-                           {option}
-                       </span>
-                       <input 
-                           type="checkbox" 
-                           className={`w-[45px] h-[45px] translate-x-10 select-checkbox leading-[25px] 
-                           `}
-                           checked={selectedOptions.includes(option)} 
-                           onChange={(e) =>
-                            handleCheckboxChange(option, e.target.checked)
-                          }
-                       />
-                    </label>
-                    ))}
+                    <div className="translate-x-5 -translate-y-23 w-[260px] h-[200px] overflow-x-hidden flex flex-col gap-5">
+                        {options[selectedIndex].map((option, index) => (
+                            <label key={index} className="flex items-center gap-0 cursor-pointer">
+                                <span
+                                    className={`font-[Loker] text-[24px]
+                                    `}
+                                >
+                                    {option}
+                                </span>
+                                <input 
+                                    type="checkbox" 
+                                    className={`w-[45px] h-[45px] translate-x-10 select-checkbox leading-[25px] 
+                                    `}
+                                    checked={selectedOptions.includes(option)} 
+                                    onChange={(e) =>
+                                        handleCheckboxChange(option, e.target.checked)
+                                    }
+                                />
+                            </label>
+                        ))}
                     </div>
                     <div className="-translate-x-10 -translate-y-15">
                         <span className="font-[Loker] text-[24px] ">
@@ -133,17 +138,22 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
                     <div>
                         <div className="-translate-x-1 -translate-y-18 w-[260px] h-[200px] overflow-x-scroll flex flex-col gap-5">
                         {options[0].map((option, index) => (
-                            <label key={index} className="flex items-center gap-0 cursor-pointer">
+                            <label 
+                                key={index} 
+                                className="flex items-center gap-0 cursor-pointer"
+                            >
                             <span
-                                className={`font-[Loker] text-[24px]
-                                `}
+                                className="
+                                    font-[Loker] text-[24px]
+                                "
                             >
                                 {option}
                             </span>
                             <input 
                                 type="checkbox" 
-                                className={`w-[45px] h-[45px] translate-x-10 select-checkbox leading-[25px] 
-                                `}
+                                className="
+                                    w-[45px] h-[45px] translate-x-10 select-checkbox leading-[25px] 
+                                "
                                 checked={selectedOptions.includes(option)} 
                                 onChange={(e) =>
                                 handleCheckboxChange(option, e.target.checked)
@@ -158,7 +168,9 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
                             </span>
                             <input 
                                 type="text" 
-                                className="text-[24px] font-[Loker] outline-none translate-x-7 border-b-1 w-[198px]" 
+                                className="
+                                    text-[24px] font-[Loker] outline-none translate-x-7 border-b-1 w-[198px]
+                                " 
                                 onChange={handleOtherOptionChange}  
                             />
                         </div>
@@ -169,12 +181,9 @@ const Survey: React.FC<QuestionsProps> = ({options, type}) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <div>
             {renderCheckbox()}
-            <button type="submit">
-                dad
-            </button>
-        </form>
+        </div>
     );
 };
 

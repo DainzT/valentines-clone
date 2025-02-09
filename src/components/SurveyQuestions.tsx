@@ -7,11 +7,12 @@ interface SurveyQuestionsProps {
     questions: string[];
 }
 
-const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions }) => {
+const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isAnswered, setIsAnswered] = useState(false);
     const [noCheckBox, setNoCheckBox] = useState(false);
-    
+    const [formData, setFormData] = useState<string[]>([]);
+
     const handleYesNoClick = (answer: string) => {
         if (answer === "yes") {
             setTimeout(() => {
@@ -32,14 +33,17 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions }) 
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setIsAnswered(true)
         } else {
-            handleSubmit();
             onClose(); 
         }
     };
 
     const handleSubmit = () => {
-        alert('Form Submitted!'); 
-      };
+        alert('Form Submitted!' ); 
+    };
+
+    const handleFormSubmit = (data: string[]) => {
+        setFormData(data); 
+    };
 
     return (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -76,8 +80,8 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions }) 
                             ${currentQuestionIndex === 9 ? 'translate-x-15 -translate-y-32 rotate-[0.4deg] text-[#5CB338]' : ''}
                         `}  
                     >
-                    {questions[currentQuestionIndex]}
-                </h1>
+                        {questions[currentQuestionIndex]}
+                    </h1>
                 
                 {currentQuestionIndex === 0 && (
                         <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
@@ -103,60 +107,82 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions }) 
 
                 {currentQuestionIndex === 1 && (
                     <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
-                        <Survey options={[["Home", "Outside"]]} type="none"/>
+                        <Survey options={[["Home", "Outside"]]} type="none" onFormSubmit={handleFormSubmit}/>
                        
                     </div>
                 )}
 
                 {currentQuestionIndex === 2 && (
                     <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
-                         <Survey options={[
+                        <Survey options={[
                             ["torikatsu", "ramen", "gyoza"], 
                             ["bibimbap", "Tteokbi", "bulgogi", "Kimchi"],
                             ["hummus", "Greek salad", "grilled kebab", "shawarma", "paella"],
                             ["tacos", "burritos", "nachos"],
                             ["risotto", "carbonara", "fetucinne", "pesto"],
-                            ]} type="cuisine" />
+                            ]} type="cuisine" 
+                            onFormSubmit={handleFormSubmit}
+                        />
                     </div>
                 )}
 
                 {currentQuestionIndex === 3 && (
                     <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
-                         <Survey options={[
-                            ["mac n cheese", "mushroom soup", "brocolli", "garlic bread", "caesar salad", "french fries", "corn & carrots", "mashed potato"]
-                            ]} type="none" />
+                        <Survey options={[
+                                ["mac n cheese", "mushroom soup", "brocolli", "garlic bread", 
+                                "caesar salad", "french fries", "corn & carrots", "mashed potato"]
+                            ]} 
+                            type="none" 
+                            onFormSubmit={handleFormSubmit}
+                        />
                     </div>
                 )}
 
                 {currentQuestionIndex === 4 && (
                     <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
-                         <Survey options={[
+                        <Survey 
+                            options={[
                                 ["banana", "berry", "orange", "peach", "apple", "pomegranate"]
-                            ]} type="none" />
+                            ]} 
+                            type="none" 
+                            onFormSubmit={handleFormSubmit}
+                        />
                     </div>
                 )}
 
                 {currentQuestionIndex === 5 && (
                     <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
-                         <Survey options={[
+                         <Survey 
+                            options={[
                                 ["cookies", "ice cream", "cake"]
-                            ]} type="none" />
+                            ]} 
+                            type="none" 
+                            onFormSubmit={handleFormSubmit}
+                        />
                     </div>
                 )}
 
                 {currentQuestionIndex === 6 && (
                     <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
-                         <Survey options={[
+                        <Survey 
+                            options={[
                                 ["coconut shake", "ice coffee", "green tea", "grape juice", "ice tea", "four seasons", "red wine", "lemonade", "mocktail", "watrmlon shake"]
-                            ]} type="none" />
+                            ]} 
+                            type="none" 
+                            onFormSubmit={handleFormSubmit}
+                        />
                     </div>
                 )}
 
                 {currentQuestionIndex === 7 && (
                     <div className="absolute flex gap-5 translate-x-15 -translate-y-36">
-                         <Survey options={[
+                        <Survey 
+                            options={[
                                 ["latenght walks", "sleepover", "painting", "gaming"]
-                            ]} type="none" />
+                            ]} 
+                            type="none" 
+                            onFormSubmit={handleFormSubmit}
+                        />
                     </div>
                 )}
 
@@ -191,7 +217,7 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions }) 
             {isAnswered && ( 
                 <button
                         onClick={handleNext}
-                        className="absolute translate-x-25 translate-y-60 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
+                        className="translate-x-25 translate-y-60 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
                 >
                         {currentQuestionIndex === questions.length - 1 ? "Close  x" : "Next ->"}
                 </button>

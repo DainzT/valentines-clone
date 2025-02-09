@@ -4,7 +4,7 @@ interface MailContentProps {
     onClose: () => void;
     onInvoiceClick: (item: string) => void; 
     invoices: string[];
-  }
+}
 
 const MailContent: React.FC<MailContentProps> = ({onClose, onInvoiceClick, invoices}) => {
     return (

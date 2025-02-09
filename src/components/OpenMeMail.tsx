@@ -21,14 +21,14 @@ const OpenMeMail: React.FC<OpenMeMailProps> = ({title, recipient, onClick}) => {
                 />
                 <div className="absolute inset-0 flex flex-col justify-center items-center text-white gap-[5rem] mb-[5rem]">
                     <h1 
-                    className="font-[Loker] text-[32px] "
-                    style={{ transform: "rotate(1.09deg)" }}
+                        className="font-[Loker] text-[32px] "
+                        style={{ transform: "rotate(1.09deg)" }}
                     >
                         {title}
                     </h1>
                     <h1 
-                    className="font-[Loker] text-[24px] text-[#FFBCBD]"
-                    style={{ transform: "rotate(0.4deg)" }}
+                        className="font-[Loker] text-[24px] text-[#FFBCBD]"
+                        style={{ transform: "rotate(0.4deg)" }}
                     >
                         TO: {recipient}
                     </h1>

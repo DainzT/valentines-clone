@@ -16,11 +16,10 @@ const Homepage = () => {
     const handleCloseSurvey = () => setShowSurvey(false);
 
     return (
-        <>
-            <div>
-               <div className={isOpen || showSurvey ? "opacity-20 transition-opacity duration-200" : "opacity-100"}> 
-                    <OpenMeMail title="Open Me" recipient="Mika" onClick={handleOpenMail}/>
-                </div> 
+        <div>
+            <div className={` ${isOpen || showSurvey ? "opacity-20 transition-opacity duration-200" : "opacity-100"}`}> 
+                <OpenMeMail title="Open Me" recipient="Mika" onClick={handleOpenMail}/>
+            </div> 
                 {isOpen && 
                     <MailContent 
                         onClose={handleCloseMail}
@@ -34,7 +33,7 @@ const Homepage = () => {
                         invoices={["Valentines Survey"]}
                     />
                 }
-                 {showSurvey && 
+                {showSurvey && 
                     <SurveyQuestions 
                         onClose={handleCloseSurvey}
                         questions={ [
@@ -51,8 +50,7 @@ const Homepage = () => {
                         ]}
                     />
                 }
-            </div>
-        </>
+        </div>
     );
 }
 
