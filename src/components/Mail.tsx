@@ -30,9 +30,9 @@ export const Mail: React.FC<MailProps> = ({data, from_name, onSubmit}) => {
       })
       .then(
         () => {
-            toast.success("Form submitted succesfully", {
+            toast.success("Survey submitted succesfully", {
                 position: "top-center",
-                autoClose: 500,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -40,7 +40,7 @@ export const Mail: React.FC<MailProps> = ({data, from_name, onSubmit}) => {
                 progress: undefined,
                 theme: "colored",
                 transition: Bounce,
-               
+                style: {width: "300px", marginTop: "20px" }
             });
             setTimeout(() => {
               onSubmit(); // Close Mail component after successful submission
@@ -52,21 +52,6 @@ export const Mail: React.FC<MailProps> = ({data, from_name, onSubmit}) => {
         }
       );
   };
-
-  const What = () => {
-    toast.success("Survey submitted succesfully", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-        style: {width: "300px", marginTop: "20px" }
-    });
-  }
 
   return (
     <div>
@@ -83,17 +68,17 @@ export const Mail: React.FC<MailProps> = ({data, from_name, onSubmit}) => {
         theme="colored"
         transition={Bounce}
         />
-    <button onClick={What} className='w-1210px h-1220px bg-black'> Hii</button>
-    <form ref={form} onSubmit={sendEmail}>
-        <input type="text" name="from_name" value={from_name} readOnly required className='opacity-0' />
-        <textarea name="message" value={data} readOnly required className='opacity-0'/>
-        <button
-            type="submit"
-            className="translate-x-66 translate-y-53 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
-        >
-            {`Close x`}
-        </button>
-    </form>
+
+        <form ref={form} onSubmit={sendEmail}>
+            <input type="text" name="from_name" value={from_name} readOnly required className='opacity-0' />
+            <textarea name="message" value={data} readOnly required className='opacity-0'/>
+            <button
+                type="submit"
+                className="translate-x-66 translate-y-53 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
+            >
+                {`Close x`}
+            </button>
+        </form>
     </div>
   );
 };
