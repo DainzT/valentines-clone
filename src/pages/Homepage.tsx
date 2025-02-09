@@ -48,6 +48,7 @@ const Homepage = () => {
                             "TIme?",
                             "GREAT! <3!"
                         ]}
+                        name="Mika"
                     />
                 }
         </div>

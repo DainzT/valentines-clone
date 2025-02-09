@@ -1,23 +1,27 @@
 import {useState } from "react";
 import Survey from "./SurveyQuestions/Survey";
 import TimeInputWithImage from "./TimeInput";
+import Mail from "./Mail"
 
 interface SurveyQuestionsProps {
     onClose: () => void;
     questions: string[];
+    name: string;
 }
 
-const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions}) => {
+const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, name}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isAnswered, setIsAnswered] = useState(false);
     const [noCheckBox, setNoCheckBox] = useState(false);
     const [formData, setFormData] = useState<string[]>([]);
+    const [fullData, setFullData] = useState<string[]>([]) 
 
     const handleYesNoClick = (answer: string) => {
         if (answer === "yes") {
             setTimeout(() => {
                 handleNext()
             }, 400);
+            setFullData([answer])
         } else {
             setTimeout(() => {
                 setNoCheckBox(true); 
@@ -25,6 +29,7 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions}) =
             setTimeout(() => {
                 handleNext()
             }, 900);
+            setFullData([answer])
         }
     };
 
@@ -32,17 +37,20 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions}) =
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setIsAnswered(true)
+            setFullData((prevFullData) => {
+                const updatedData = [...prevFullData, ...formData];
+                console.log("Updated fullData:", updatedData); // Log updated data immediately
+                return updatedData;
+            });
+            setFormData([])
         } else {
             onClose(); 
         }
     };
 
-    const handleSubmit = () => {
-        alert('Form Submitted!' ); 
-    };
-
     const handleFormSubmit = (data: string[]) => {
         setFormData(data); 
+        console.log("Updated FormData:", data);
     };
 
     return (
@@ -188,7 +196,7 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions}) =
 
                 {currentQuestionIndex === 8 && (
                     <div className="absolute flex gap-5 -translate-x-1 -translate-y-70">
-                        <TimeInputWithImage submit={handleSubmit}/>
+                        <TimeInputWithImage onFormSubmit={handleFormSubmit}/>
                     </div>
                 )}
 
@@ -215,13 +223,19 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions}) =
             </div>
 
             {isAnswered && ( 
-                <button
-                        onClick={handleNext}
-                        className="translate-x-25 translate-y-60 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
-                >
-                        {currentQuestionIndex === questions.length - 1 ? "Close  x" : "Next ->"}
-                </button>
-            )}
+                currentQuestionIndex === questions.length - 1 ? (
+                    <Mail data={fullData.toString()} 
+                        from_name={name}
+                        />
+                  ) : (
+                    <button
+                      onClick={handleNext}
+                      className="translate-x-25 translate-y-60 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
+                    >
+                      {`Next ->`}
+                    </button>
+                  )
+                )}
         </div>
     );
 };
