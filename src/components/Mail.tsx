@@ -1,14 +1,16 @@
 import React, { useRef } from 'react';
 import emailjs from '@emailjs/browser';
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface MailProps {
     data: string; 
     from_name:string;
-    
+    onSubmit: () => void;
   }
   
 
-export const Mail: React.FC<MailProps> = ({data, from_name}) => {
+export const Mail: React.FC<MailProps> = ({data, from_name, onSubmit}) => {
   const form = useRef<HTMLFormElement | null>(null);
   const publicKey = import.meta.env.VITE_PUBLIC_KEY;
   const templateId = import.meta.env.VITE_TEMPLATE_ID;
@@ -28,27 +30,71 @@ export const Mail: React.FC<MailProps> = ({data, from_name}) => {
       })
       .then(
         () => {
-          console.log('SUCCESS!');
+            toast.success("Form submitted succesfully", {
+                position: "top-center",
+                autoClose: 500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+               
+            });
+            setTimeout(() => {
+              onSubmit(); // Close Mail component after successful submission
+            }, 2000);
+            console.log('SUCCESS!');
         },
         (error) => {
-          console.log('FAILED...', error.text);
+            console.log('FAILED...', error.text);
         }
       );
   };
 
+  const What = () => {
+    toast.success("Survey submitted succesfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        style: {width: "300px", marginTop: "20px" }
+    });
+  }
+
   return (
+    <div>
+        <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+        />
+    <button onClick={What} className='w-1210px h-1220px bg-black'> Hii</button>
     <form ref={form} onSubmit={sendEmail}>
-        <label>Name</label>
-        <input type="text" name="from_name" value={from_name} readOnly required />
-        <label>Message</label>
-        <textarea name="message" value={data} readOnly required />
+        <input type="text" name="from_name" value={from_name} readOnly required className='opacity-0' />
+        <textarea name="message" value={data} readOnly required className='opacity-0'/>
         <button
             type="submit"
-            className="translate-x-25 translate-y-60 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
+            className="translate-x-66 translate-y-53 inter-font font-bold text-[16px] text-[#FFFFFF] w-[103px] h-[32px] bg-[#61BD3C] rounded-[20px] pl-1"
         >
             {`Close x`}
         </button>
     </form>
+    </div>
   );
 };
 

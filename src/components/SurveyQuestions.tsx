@@ -226,6 +226,7 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, na
                 currentQuestionIndex === questions.length - 1 ? (
                     <Mail data={fullData.toString()} 
                         from_name={name}
+                        onSubmit={handleNext}
                         />
                   ) : (
                     <button
