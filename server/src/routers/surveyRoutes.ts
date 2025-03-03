@@ -41,4 +41,22 @@ router.post("/send", async (req: Request, res: Response): Promise<void> => {
     }
 });
 
+router.get("/retrieve", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const surveyResponse = await prisma.surveyResponse.findFirst();
+
+        if (!surveyResponse) {
+            res.status(404).json({ success: false, message: "No survey response found" });
+            return; 
+        }
+
+        res.status(200).json({ success: true, data: surveyResponse });
+        return; 
+        
+    } catch (error: any) {
+        console.error("Error retrieving survey:", error.message);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
+
 export default router;
