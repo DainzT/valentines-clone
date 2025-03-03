@@ -68,7 +68,7 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, na
     
     const submitSurvey = async () => {
         try {
-            await fetch("http://localhost:3002/survey/send", {
+            await fetch("http://localhost:3002/api/survey/send", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

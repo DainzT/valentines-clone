@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use("/survey", surveyRoutes)
+app.use("/api/survey", surveyRoutes)
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => 
