@@ -1,4 +1,5 @@
-import {useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import {useEffect, useState } from "react";
 import Survey from "./SurveyQuestions/Survey";
 import TimeInputWithImage from "./TimeInput";
 import Mail from "./Mail"
@@ -58,6 +59,31 @@ const SurveyQuestions: React.FC<SurveyQuestionsProps> = ({onClose, questions, na
         setFormData(data); 
         console.log("Updated FormData:", data);
     };
+
+    useEffect(() => {
+        if (isAnswered && currentQuestionIndex === questions.length - 1) {
+            submitSurvey();
+        }
+    }, [isAnswered, currentQuestionIndex, questions.length]);
+    
+    const submitSurvey = async () => {
+        try {
+            await fetch("http://localhost:3002/survey/send", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    answers: fullData,
+                }),
+            });
+    
+            console.log("Survey submitted successfully");
+        } catch (error) {
+            console.error("Error submitting survey:", error);
+        }
+    };
+    
 
     return (
         <div className="absolute inset-0 flex items-center justify-center">
