@@ -23,7 +23,7 @@ const EmployeeData = ({
                    >
                             <li>
                                 <label>{employee.name}</label>
-                                <label>{employee.salary}</label>
+                                <label>₱{employee.salary}</label>
                             </li>
 
                     </ul> 
@@ -36,7 +36,7 @@ const EmployeeData = ({
                    >
                             <li>
                                 <label>{employee.name}</label>
-                                <label>{employee.salary}</label>
+                                <label>₱{employee.salary}</label>
                             </li>
 
                     </ul> 

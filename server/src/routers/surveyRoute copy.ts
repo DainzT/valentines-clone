@@ -59,4 +59,14 @@ router.get("/retrieve", async (req: Request, res: Response): Promise<void> => {
     }
 });
 
+router.get("/message", async (req: Request, res: Response) => {
+    try {
+        res.status(200).json({Woah: "Hi"})
+    } catch (error: any) {
+        res.status(500).json({error: error.message || "Internal server error"})
+    }
+})
+
+router.put
+
 export default router;

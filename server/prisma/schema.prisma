@@ -18,3 +18,9 @@ model SurveyResponse {
   answer    String[] @db.Text
   createdAt DateTime @default(now())
 }
+
+model EmployeeData {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.Text
+  salary    Int      @db.Integer
+}
