@@ -16,7 +16,7 @@ const EmployeeData = ({
         <>
             <div>
                 <h1>Entry Level</h1>
-                {data.filter((employee) => employee.salary < 50000).
+                {data?.filter((employee) => employee.salary < 50000).
                     map((employee, index) => (
                    <ul
                     key={index}
@@ -29,7 +29,7 @@ const EmployeeData = ({
                     </ul> 
                 ))}
                 <h1>Senior</h1>
-                {data.filter((employee) => employee.salary >= 50000).
+                {data?.filter((employee) => employee.salary >= 50000).
                     map((employee, index) => (
                    <ul
                     key={index}

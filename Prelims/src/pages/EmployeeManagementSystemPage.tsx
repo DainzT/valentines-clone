@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react";
 import EmployeeData from "../components/EmployeeData";
@@ -8,7 +9,7 @@ interface EmployeeProps {
 }
 
 interface EmployeeListProps {
-    data: Array<EmployeeProps>
+    data: EmployeeProps[]
 }
 
 const EmployeeManagementSystemPage = () => {
@@ -18,7 +19,7 @@ const EmployeeManagementSystemPage = () => {
         try {
             const response =  await fetch("http://localhost:3002/api/ems/employees")
             response.json().then((res)=> 
-                res.data
+                useEmployees(res.data)
             ) 
         } catch (error) {
             console.error("Error submitting survey:", error);
@@ -33,28 +34,7 @@ const EmployeeManagementSystemPage = () => {
         <>
             <h1>Employee Management System</h1>
             <EmployeeData 
-                data = {[
-                    {
-                        name: "Dainz",
-                        salary: 40000,
-                    },
-                    {
-                        name: "Floyd Torechilla",
-                        salary: 60000,
-                    },
-                    {
-                        name: "Michael Flores",
-                        salary: 50000,
-                    },
-                    {
-                        name: "Kaizen Cenat",
-                        salary: 100000
-                    },
-                    {
-                        name: "Skibidi Sigma",
-                        salary: 1000
-                    }   
-                ]}
+                data = {Employees}
             />
         </>
     );
