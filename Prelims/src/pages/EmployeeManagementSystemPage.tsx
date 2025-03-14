@@ -8,12 +8,8 @@ interface EmployeeProps {
     salary: number
 }
 
-interface EmployeeListProps {
-    data: EmployeeProps[]
-}
-
 const EmployeeManagementSystemPage = () => {
-    const [Employees, useEmployees] = useState<EmployeeListProps>()
+    const [Employees, useEmployees] = useState<EmployeeProps[]>([]);
 
     const fetchEmployees = async () =>{
         try {
