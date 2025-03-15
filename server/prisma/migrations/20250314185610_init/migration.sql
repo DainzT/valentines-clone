@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Employee" ALTER COLUMN "expectedSalary" SET DATA TYPE DOUBLE PRECISION;

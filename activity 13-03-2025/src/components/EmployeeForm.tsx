@@ -13,7 +13,7 @@ const EmployeeForm = ({
         lastName: "",
         groupName: "",
         role: "",
-        expectedSalary: 0,
+        expectedSalary: "",
         expectedDateOfDefense: "",
     });
 
@@ -34,7 +34,7 @@ const EmployeeForm = ({
             lastName: "",
             groupName: "",
             role: "",
-            expectedSalary: 0,
+            expectedSalary: "",
             expectedDateOfDefense: "",
         });
     };
@@ -81,6 +81,7 @@ const EmployeeForm = ({
                     min="0"
                     max="10000000"
                     name="expectedSalary"   
+                    value={employee.expectedSalary}
                     onChange={handleChange}
                     placeholder="Expected Salary"
                 />

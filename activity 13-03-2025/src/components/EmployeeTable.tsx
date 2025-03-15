@@ -3,17 +3,15 @@ import EmployeeRow from "./EmployeeRow";
 
 interface EmployeeTableProps {
     employees: EmployeeDetailProps[];
-    setEmployees: React.Dispatch<React.SetStateAction<EmployeeDetailProps[]>>;
+    onDelete: (employee: EmployeeDetailProps) => void;
+    onUpdate: (employee: EmployeeDetailProps) => void;
 }
 
 const EmployeeTable = ({
     employees,
-    setEmployees
+    onDelete,
+    onUpdate,
 }: EmployeeTableProps ) => {
-
-    const handleDelete = (employeeToDelete: EmployeeDetailProps) => {
-        setEmployees(employees.filter(employee => employee !== employeeToDelete));
-    };
 
     return (
         <div className="flex justify-center ">
@@ -46,7 +44,7 @@ const EmployeeTable = ({
                 <tbody>
                     {employees.map((employee, index) => {
                         return (
-                            <EmployeeRow key={index} employee={employee} onDelete={handleDelete} />
+                            <EmployeeRow key={index} employee={employee} onDelete={onDelete} onUpdate={onUpdate}/>
                         );
                     })}
                 </tbody>
