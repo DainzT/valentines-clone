@@ -14,7 +14,7 @@ const EmployeeForm = ({
         groupName: "",
         role: "",
         expectedSalary: 0,
-        expectedDateofDefense: "",
+        expectedDateOfDefense: "",
     });
 
 
@@ -35,14 +35,15 @@ const EmployeeForm = ({
             groupName: "",
             role: "",
             expectedSalary: 0,
-            expectedDateofDefense: "",
+            expectedDateOfDefense: "",
         });
     };
 
     return (
-        <div className="flex justify-center my-2">
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-full max-w-[80%]">
+        <div className="flex justify-center my-5">
+            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg  w-full max-w-[80%] ">
                 <input
+                    className="border border-gray-400 px-4 py-2 w-[11.3%]"
                     type="text"
                     name="firstName"
                     value={employee.firstName}
@@ -50,6 +51,7 @@ const EmployeeForm = ({
                     placeholder="First Name"
                 />  
                 <input
+                    className="border border-gray-400 px-4 py-2 w-[11%]"
                     type="text"
                     name="lastName"
                     value={employee.lastName}
@@ -57,6 +59,7 @@ const EmployeeForm = ({
                     placeholder="Last Name"
                 />
                 <input
+                    className="border border-gray-400 px-4 py-2 w-[13.2%]"
                     type="text"
                     name="groupName"
                     value={employee.groupName}
@@ -64,6 +67,8 @@ const EmployeeForm = ({
                     placeholder="Group Name"
                 />
                 <input
+
+                    className="border border-gray-400 px-4 py-2 w-[10.5%]"
                     type="text"
                     name="role"
                     value={employee.role}
@@ -71,7 +76,7 @@ const EmployeeForm = ({
                     placeholder="Role"
                 />
                 <input
-                    className="w-[10%]"
+                    className="border border-gray-400 px-4 py-2 w-[16.4%]"
                     type="number"
                     min="0"
                     max="10000000"
@@ -80,12 +85,17 @@ const EmployeeForm = ({
                     placeholder="Expected Salary"
                 />
                 <input
+                    className="border border-gray-400 px-4 py-2 w-[27%]"
                     type="date"
-                    name="expectedDateofDefense"
-                    value={employee.expectedDateofDefense}
+                    name="expectedDateOfDefense"
+                    value={employee.expectedDateOfDefense}
                     onChange={handleChange}
                 />
-                <button type="submit">Submit</button>
+                <button 
+                    type="submit" 
+                    className="border border-gray-400 px-4 py-2 w-[10.6%]">
+                    Submit
+                </button>
             </form>
         </div>
     );

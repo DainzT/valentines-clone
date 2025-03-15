@@ -24,3 +24,15 @@ model EmployeeData {
   name      String   @db.Text
   salary    Int      @db.Integer
 }
+
+model Employee {
+  id                    String   @id @default(uuid()) 
+  firstName             String
+  lastName              String
+  groupName             String
+  role                  String
+  expectedSalary        Int
+  expectedDateOfDefense DateTime
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}

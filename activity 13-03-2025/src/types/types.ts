@@ -4,5 +4,5 @@ export interface EmployeeDetailProps {
     groupName: string;
     role: string;
     expectedSalary: number;
-    expectedDateofDefense: string;
+    expectedDateOfDefense: string;
 }
