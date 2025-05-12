@@ -6,6 +6,7 @@ interface TaskFactoryProps {
     task: Task;
     onToggleComplete: (id: string) => void;
     onDelete: (id: string) => void;
+    onToggleChecklistItem?: (taskId: string, itemId: string) => void;
 }
 
 const TaskCard: React.FC<{ children: React.ReactNode, isCompleted: boolean }> = ({ children, isCompleted }) => (
@@ -30,7 +31,12 @@ const BasicTaskComponent: React.FC<{ task: BasicTask }> = ({ task }) => {
     );
 };
 
-const ChecklistTaskComponent: React.FC<{ task: ChecklistTask }> = ({ task }) => {
+interface ChecklistTaskComponentProps {
+    task: ChecklistTask;
+    onToggleItem?: (taskId: string, itemId: string) => void;
+}
+
+const ChecklistTaskComponent: React.FC<ChecklistTaskComponentProps> = ({ task, onToggleItem }) => {
     const completedCount = task.items.filter(item => item.completed).length;
     const progress = (completedCount / task.items.length) * 100;
 
@@ -60,6 +66,7 @@ const ChecklistTaskComponent: React.FC<{ task: ChecklistTask }> = ({ task }) => 
                             <input
                                 type="checkbox"
                                 checked={item.completed}
+                                onChange={() => onToggleItem?.(task.id, item.id)}
                                 readOnly
                                 className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                             />
@@ -76,8 +83,8 @@ const ChecklistTaskComponent: React.FC<{ task: ChecklistTask }> = ({ task }) => 
 };
 
 const TimedTaskComponent: React.FC<{ task: TimedTask }> = ({ task }) => {
-    const isDueSoon = new Date(task.dueDate) < new Date(Date.now() + 86400000 * 2);
-    const isOverdue = new Date(task.dueDate) < new Date();
+    const isDueSoon = new Date(task.dueDate!) < new Date(Date.now() + 86400000 * 2);
+    const isOverdue = new Date(task.dueDate!) < new Date();
     return (
         <div className="space-y-2">
             <h3 className={`text-lg font-medium ${task.completed ? 'text-gray-500 line-through' : 'text-gray-800'
@@ -88,12 +95,12 @@ const TimedTaskComponent: React.FC<{ task: TimedTask }> = ({ task }) => {
                 <div className={`flex items-center gap-1 ${isOverdue ? 'text-red-600' : isDueSoon ? 'text-amber-600' : 'text-gray-600'
                     }`}>
                     <FiCalendar className="flex-shrink-0" />
-                    <span>Due: {task.dueDate.toLocaleDateString()}</span>
+                    <span>Due: {new Date(task.dueDate!).toLocaleDateString()}</span>
                 </div>
                 {task.reminder && (
                     <div className="flex items-center gap-1 text-gray-600">
                         <FiBell className="flex-shrink-0" />
-                        <span>{task.reminder.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span>{new Date(task.reminder).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                 )}
             </div>
@@ -111,6 +118,7 @@ export const TaskFactory = ({
     task,
     onToggleComplete,
     onDelete,
+    onToggleChecklistItem, 
 }: TaskFactoryProps) => {
     const renderTask = () => {
         switch (type) {
@@ -119,7 +127,12 @@ export const TaskFactory = ({
             case 'timed':
                 return <TimedTaskComponent task={task as TimedTask} />;
             case 'checklist':
-                return <ChecklistTaskComponent task={task as ChecklistTask} />;
+                return (
+                    <ChecklistTaskComponent
+                        task={task as ChecklistTask}
+                        onToggleItem={onToggleChecklistItem}
+                    />
+                );
             default:
                 throw new Error(`Unknown task type: ${type}`);
         }

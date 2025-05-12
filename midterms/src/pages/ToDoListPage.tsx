@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TaskFactory } from "../components/tasks/TaskFactory";
 import type { Task } from '../types/taskTypes';
 import { taskManager } from "../lib/TaskManager";
@@ -8,61 +8,89 @@ import { TaskFormModal } from "../components/tasks/TaskFormModal";
 
 const ToDoListPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [tasks, setTasks] = useState<Task[]>([
-        {
-            id: 1,
-            type: 'basic',
-            title: 'Buy groceries',
-            description: 'Milk, eggs, bread',
-            completed: false,
-            createdAt: new Date(),
-        },
-        {
-            id: 2,
-            type: 'timed',
-            title: 'Doctor appointment',
-            dueDate: new Date('2023-12-15'),
-            reminder: new Date('2023-12-15T09:00:00'),
-            completed: false,
-            createdAt: new Date('2022-12-15T09:00:00'),
-        },
-        {
-            id: 3,
-            type: 'checklist',
-            title: 'Project tasks',
-            items: [
-                { id: 3, text: 'Research', completed: true },
-                { id: 4, text: 'Design', completed: false },
-            ],
-            completed: false,
-            createdAt: new Date(),
-        },
-    ]);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleToggleComplete = (id: string) => {
-        setTasks(tasks.map(task =>
-            task.id === id ? { ...task, completed: !task.completed } : task
-        ));
+    useEffect(() => {
+        const loadTasks = async () => {
+            try {
+                setIsLoading(true);
+                const fetchedTasks = await taskManager.fetchTasks();
+                setTasks(fetchedTasks)
+                console.log(fetchedTasks)
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadTasks();
+    }, []);
+
+    const handleDeleteTask = async (id: string) => {
+        try {
+            await taskManager.removeTask(id);
+            setTasks(prev => prev.filter(task => task.id !== id));
+        } catch (err) {
+            setError('Failed to delete task.');
+            console.error(err);
+        }
     };
 
-    const handleDelete = (id: string) => {
-        // taskManager.removeTask(id)
-        return
+    const handleAddTask = async (task: Omit<Task, 'id'>) => {
+        console.log(task)
+        try {
+            const newTask = await taskManager.addTask(task);
+            setTasks(prev => [...prev, newTask]);
+            setIsModalOpen(false);
+        } catch (err) {
+            setError('Failed to add task.');
+            console.error(err);
+        }
     };
 
-    const handleAddTask = () => {
-        // const newTask = taskManager.addTask({
-        // type: 'basic',
-        // title: 'New Task',
-        // completed: false,
-        // });
+    const handleToggleComplete = async (id: string) => {
+        try {
+            const taskToUpdate = tasks.find(task => task.id === id);
+            if (!taskToUpdate) return;
+
+            const updatedTask = { ...taskToUpdate, completed: !taskToUpdate.completed };
+            await taskManager.updateTask(updatedTask);
+            setTasks(prev => prev.map(task => task.id === id ? updatedTask : task));
+        } catch (err) {
+            setError('Failed to update task.');
+            console.error(err);
+        }
     };
 
-    const handleSave = (task) => {
-        console.log('Task saved:', task);
-        setIsModalOpen(false);
+    const handleToggleChecklistItem = async (taskId: string, itemId: string) => {
+        try {
+            const taskToUpdate = tasks.find(task => task.id === taskId);
+            if (!taskToUpdate || taskToUpdate.type !== 'checklist') return;
+
+            const updatedItems = taskToUpdate.items!.map(item =>
+                item.id === itemId ? { ...item, completed: !item.completed } : item
+            );
+            const updatedTask = { ...taskToUpdate, items: updatedItems };
+
+            await taskManager.updateTask(updatedTask);
+            setTasks(prev => prev.map(task =>
+                task.id === taskId ? updatedTask : task
+            ));
+        } catch (err) {
+            setError('Failed to update checklist item.');
+            console.error(err);
+        }
     };
 
+    if (isLoading) {
+        return <div>Loading tasks...</div>;
+    }
+
+    if (error) {
+        return <div className="text-red-500">{error}</div>;
+    }
 
     return (
         <div className="bg-gray-50 flex flex-col items-center justify-start pt-12 px-4">
@@ -81,7 +109,7 @@ const ToDoListPage = () => {
                 <TaskFormModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    onSave={handleSave}
+                    onAdd={handleAddTask}
                 />
                 <div className="space-y-4 w-full ">
                     {tasks.map(task => (
@@ -90,7 +118,8 @@ const ToDoListPage = () => {
                             type={task.type}
                             task={task}
                             onToggleComplete={handleToggleComplete}
-                            onDelete={handleDelete}
+                            onDelete={handleDeleteTask}
+                            onToggleChecklistItem={handleToggleChecklistItem}
                         />
                     ))}
                 </div>

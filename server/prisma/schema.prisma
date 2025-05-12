@@ -36,3 +36,54 @@ model Employee {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
+
+enum TaskType {
+  basic
+  timed
+  checklist
+}
+
+enum Priority {
+  low
+  medium
+  high
+}
+
+enum RepeatFrequency {
+  daily
+  weekly
+  monthly
+  yearly
+  none
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  type        TaskType
+  title       String
+  description String?
+  completed   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  priority    Priority?
+  
+  dueDate     DateTime?
+  reminder    DateTime?
+  repeat      RepeatFrequency? @default(none)
+  
+  items       ChecklistItem[]
+  progress    Int?           @default(0)
+  
+  @@map("tasks")
+}
+
+model ChecklistItem {
+  id          String   @id @default(uuid())
+  text        String
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  task        Task     @relation(fields: [taskId], references: [id])
+  taskId      String
+  
+  @@map("checklist_items")
+}

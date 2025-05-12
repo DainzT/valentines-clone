@@ -1,39 +1,28 @@
-import { Task, BasicTask, TimedTask, ChecklistTask } from "../types/taskTypes";
+import type { Task } from "../types/taskTypes";
+import { apiClient } from "./apiClient";
 
-class TaskManager {
-    private static instance: TaskManager;
-    private tasks: Task[] = [];
+export const taskManager = {
+    async fetchTasks(): Promise<Task[]> {
+        const response = await apiClient.get('/tasks');
+        console.log(response.data)
+        return response.data;
+    },
 
-    public static getInstance(): TaskManager {
-        if (!TaskManager.instance) {
-            TaskManager.instance = new TaskManager();
-        }
-        return TaskManager.instance;
-    }
+    async addTask(task: Omit<Task, 'id'>): Promise<Task> {
+        const response = await apiClient.post('/tasks', task);
+        return response.data;
+    },
 
-    public addTask(task: Omit<Task, 'id'>): Task {
-        const newTask: Task = {
-            ...task,
-            createdAt: new Date()
-        };
-        this.tasks.push(newTask);
-        return newTask;
-    }
+    async updateTask(task: Task): Promise<Task> {
+        const response = await apiClient.put(`/tasks/${task.id}`, task);
+        return response.data;
+    },
 
-    public removeTask(id: number): boolean {
-        const initialLength = this.tasks.length;
-        this.tasks = this.tasks.filter(task => task.id !== id);
-        const removed = initialLength !== this.tasks.length;
-        return removed;
-    }
+    async removeTask(id: string): Promise<void> {
+        await apiClient.delete(`/tasks/${id}`);
+    },
+};
 
-    public searchTasks(query: string): Task[] {
-        const lowerQuery = query.toLowerCase();
-        return this.tasks.filter(task =>
-            task.title.toLowerCase().includes(lowerQuery) ||
-            (task.description && task.description.toLowerCase().includes(lowerQuery))
-        );
-    }
-}
-
-export const taskManager = TaskManager.getInstance();
+// findTaskById(id: string): Task | undefined {
+//     return this.tasks.find(t => t.id === id);
+// }

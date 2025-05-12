@@ -12,7 +12,7 @@ export interface BasicTask extends BaseTask {
 
 export interface TimedTask extends BaseTask {
     type: 'timed';
-    dueDate: Date;
+    dueDate?: Date;
     reminder?: Date;
 }
 

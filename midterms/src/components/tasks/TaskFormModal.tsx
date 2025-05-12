@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { FiX, FiCalendar, FiClock, FiList, FiCheckCircle, FiPlus } from 'react-icons/fi';
+import { FiX, FiClock, FiList, FiCheckCircle, FiPlus } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { ChecklistTask, Task } from '../../types/taskTypes';
+import type { Task, ChecklistTask, BaseTask } from '../../types/taskTypes';
 
 type TaskType = 'basic' | 'timed' | 'checklist';
 
@@ -9,27 +9,34 @@ interface TaskFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialTask?: Task;
-  onSave: (task: Task) => void;
+  onAdd: (task: Task) => void;
 }
-
 
 export const TaskFormModal = ({
   isOpen,
   onClose,
   initialTask,
-  onSave
+  onAdd
 }: TaskFormModalProps) => {
-
   const [taskType, setTaskType] = useState<TaskType>(initialTask?.type || 'basic');
   const [title, setTitle] = useState(initialTask?.title || '');
   const [description, setDescription] = useState(initialTask?.description || '');
   const [dueDate, setDueDate] = useState(
-    initialTask?.type === 'timed' ? initialTask.dueDate.toISOString().slice(0, 16) : ''
+    initialTask?.type === 'timed' ? formatDateForInput(initialTask.dueDate!) : ''
   );
-  const [checklistItems, setChecklistItems] = useState<ChecklistTask[]>(
-    initialTask?.type === 'checklist' ? initialTask.items : [{ id: String(Date.now()), text: '', completed: false }]
+  const [checklistItems, setChecklistItems] = useState<ChecklistTask['items']>(
+    initialTask?.type === 'checklist' ? initialTask.items : [{ id: generateId(), text: '', completed: false }]
   );
-  console.log(checklistItems)
+
+  function formatDateForInput(date: Date): string {
+    const pad = (num: number) => num.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+
+  function generateId(): string {
+    return Date.now().toString();
+  }
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -39,7 +46,7 @@ export const TaskFormModal = ({
   }, [isOpen]);
 
   const handleAddChecklistItem = () => {
-    setChecklistItems([...checklistItems, { id: String(Date.now()), text: '', completed: false }]);
+    setChecklistItems([...checklistItems, { id: generateId(), text: '', completed: false }]);
   };
 
   const handleRemoveChecklistItem = (id: string) => {
@@ -57,17 +64,18 @@ export const TaskFormModal = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const baseTask = {
+    const baseTask: Omit<BaseTask, 'type'> = {
+      id: initialTask?.id || generateId(),
       title,
       description,
-      completed: false,
-      createdAt: new Date()
+      completed: initialTask?.completed || false,
+      createdAt: initialTask?.createdAt || new Date()
     };
 
     let taskData: Task;
-
     switch (taskType) {
       case 'timed':
+        if (!dueDate) return;
         taskData = {
           ...baseTask,
           type: 'timed',
@@ -79,7 +87,7 @@ export const TaskFormModal = ({
         taskData = {
           ...baseTask,
           type: 'checklist',
-          items: checklistItems.filter(item => item.title.trim() !== '')
+          items: checklistItems.filter(item => item.text.trim() !== '')
         };
         break;
       default:
@@ -89,7 +97,7 @@ export const TaskFormModal = ({
         };
     }
 
-    onSave(taskData);
+    onAdd(taskData);
     onClose();
   };
 
@@ -113,9 +121,7 @@ export const TaskFormModal = ({
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
           >
-            <div
-              className="relative w-full max-w-md bg-white rounded-xl shadow-xl z-10 max-h-[90vh] overflow-y-auto"
-            >
+            <div className="relative w-full max-w-md bg-white rounded-xl shadow-xl z-10 max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-gray-800">
@@ -132,14 +138,15 @@ export const TaskFormModal = ({
                 <form onSubmit={handleSubmit}>
                   <div className="mb-6">
                     <div className="flex space-x-1 p-1 bg-gray-100 rounded-lg">
-                      {['basic', 'timed', 'checklist'].map((type) => (
+                      {(['basic', 'timed', 'checklist'] as TaskType[]).map((type) => (
                         <button
                           key={type}
                           type="button"
-                          className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${taskType === type
-                            ? 'bg-white shadow-sm text-blue-600'
-                            : 'text-gray-600 hover:text-gray-800'
-                            }`}
+                          className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
+                            taskType === type
+                              ? 'bg-white shadow-sm text-blue-600'
+                              : 'text-gray-600 hover:text-gray-800'
+                          }`}
                           onClick={() => setTaskType(type)}
                         >
                           <div className="flex items-center justify-center gap-2">
@@ -197,7 +204,6 @@ export const TaskFormModal = ({
                             onChange={(e) => setDueDate(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
-                          <FiCalendar className="absolute right-3 top-2.5 text-gray-400" />
                         </div>
                       </div>
                     </div>
