@@ -23,7 +23,7 @@ export const TaskSortingStrategy = {
 
     sortByCompletion: (tasks: Task[]): Task[] => {
         return [...tasks].sort((a, b) =>
-            Number(a.completed) - Number(b.completed)
+            Number(b.completed) - Number(a.completed)
         );
     }
 };
