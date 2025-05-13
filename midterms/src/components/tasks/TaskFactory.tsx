@@ -10,7 +10,7 @@ interface TaskFactoryProps {
 }
 
 const TaskCard: React.FC<{ children: React.ReactNode, isCompleted: boolean }> = ({ children, isCompleted }) => (
-    <div className={`bg-white rounded-xl shadow-sm p-5 border transition-all ${isCompleted ? 'border-green-100 bg-green-50' : 'border-gray-100 hover:shadow-md'
+    <div className={`bg-white flex-1 rounded-xl shadow-sm p-5 border transition-all ${isCompleted ? 'border-green-100 bg-green-50' : 'border-gray-100 hover:shadow-md'
         }`}>
         {children}
     </div>
@@ -87,6 +87,12 @@ const TimedTaskComponent: React.FC<{ task: TimedTask }> = ({ task }) => {
     const isOverdue = new Date(task.dueDate!) < new Date();
     return (
         <div className="space-y-2">
+            {task.reminder && (
+                <div className={` ${isOverdue ? 'text-red-600' : isDueSoon ? 'text-amber-600' : 'text-gray-600'} flex items-center justify-end gap-1`}>
+                    <FiBell className="flex-shrink-0" />
+                    <span>{new Date(task.reminder).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+            )}
             <h3 className={`text-lg font-medium ${task.completed ? 'text-gray-500 line-through' : 'text-gray-800'
                 }`}>
                 {task.title}
@@ -97,12 +103,6 @@ const TimedTaskComponent: React.FC<{ task: TimedTask }> = ({ task }) => {
                     <FiCalendar className="flex-shrink-0" />
                     <span>Due: {new Date(task.dueDate!).toLocaleDateString()}</span>
                 </div>
-                {task.reminder && (
-                    <div className="flex items-center gap-1 text-gray-600">
-                        <FiBell className="flex-shrink-0" />
-                        <span>{new Date(task.reminder).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                    </div>
-                )}
             </div>
             {isOverdue && !task.completed && (
                 <span className="inline-block px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-full">
@@ -118,7 +118,7 @@ export const TaskFactory = ({
     task,
     onToggleComplete,
     onDelete,
-    onToggleChecklistItem, 
+    onToggleChecklistItem,
 }: TaskFactoryProps) => {
     const renderTask = () => {
         switch (type) {
@@ -139,19 +139,17 @@ export const TaskFactory = ({
     };
 
     return (
-        <div className={`group relative ${task.completed ? 'opacity-90' : ''}`}>
-            <div className="absolute -left-10 top-1/2 transform -translate-y-1/2">
-                <button
-                    onClick={() => onToggleComplete(task.id)}
-                    className={`p-1.5 rounded-full ${task.completed
-                        ? 'text-green-500 bg-green-100'
-                        : 'text-gray-400 hover:text-gray-500 bg-gray-100'
-                        }`}
-                    aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
-                >
-                    <FiCheckCircle className="text-xl" />
-                </button>
-            </div>
+        <div className={`group relative flex items-center gap-3 ${task.completed ? 'opacity-90' : ''}`}>
+            <button
+                onClick={() => onToggleComplete(task.id)}
+                className={`p-1.5 rounded-full ${task.completed
+                    ? 'text-green-500 bg-green-100'
+                    : 'text-gray-400 hover:text-gray-500 bg-gray-100'
+                    }`}
+                aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
+            >
+                <FiCheckCircle className="text-xl" />
+            </button>
 
             <TaskCard isCompleted={task.completed}>
                 <div className="relative">

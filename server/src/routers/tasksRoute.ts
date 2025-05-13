@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Router, Request, Response } from "express";
-import { title } from "process";
+import { calculateProgress } from "../utils/taskUtils";
 
 const router: Router = Router();
 const prisma = new PrismaClient();
@@ -57,10 +57,16 @@ router.post("/tasks", async (req: Request, res: Response): Promise<void> => {
     }
 });
 
-router.delete("/tasks", async (req: Request, res: Response): Promise<void> => {
+router.delete("/tasks/:id", async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params
     try {
-        const { id } = req.params;
-        await prisma.task.delete({ where: { id } });
+        await prisma.checklistItem.deleteMany({
+            where: { taskId: id }
+        });
+        await prisma.task.delete({
+            where: { id }
+        });
+
         res.status(204).send();
     } catch (error) {
         console.error("Error deleting task:", error);
@@ -69,17 +75,52 @@ router.delete("/tasks", async (req: Request, res: Response): Promise<void> => {
 
 });
 
-router.put("/tasks", async (req: Request, res: Response): Promise<void> => {
+router.put("/tasks/:id", async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const { items, ...updateData } = req.body
     try {
-        const { id } = req.params;
+        const existingTask = await prisma.task.findUnique({
+            where: { id },
+            include: { items: true }
+        });
+
+        if (!existingTask) {
+            res.status(404).json({ error: "Task not found" });
+            return
+        }
+
+        if (items && existingTask.type === 'checklist') {
+            await prisma.checklistItem.deleteMany({
+                where: { taskId: id }
+            });
+
+            await prisma.checklistItem.createMany({
+                data: items.map((item: any) => ({
+                    text: item.text,
+                    completed: item.completed || false,
+                    taskId: id
+                }))
+            });
+        }
+
+        if (existingTask.type === 'checklist') {
+            const currentItems = items || existingTask.items || [];
+            updateData.progress = calculateProgress(currentItems);
+        }
+
         const updatedTask = await prisma.task.update({
             where: { id },
-            data: req.body,
+            data: updateData,
+            include: {
+                items: existingTask.type === 'checklist'
+            }
         });
-        res.status(200).json(updatedTask);
+
+        res.json(updatedTask);
     } catch (error) {
         console.error("Error updating task:", error);
         res.status(500).json({ message: "Failed to update task" });
+        return;
     }
 });
 
